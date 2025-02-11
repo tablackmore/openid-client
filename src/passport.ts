@@ -71,10 +71,10 @@ interface StrategyOptionsBase {
    * `false`.
    */
   useJAR?:
-    | false
-    | client.CryptoKey
-    | PrivateKey
-    | [client.CryptoKey | PrivateKey, client.ModifyAssertionFunction]
+  | false
+  | client.CryptoKey
+  | PrivateKey
+  | [client.CryptoKey | PrivateKey, client.ModifyAssertionFunction]
   /**
    * Whether the verify function should get the `req` as first argument instead.
    * Default is `false`.
@@ -172,7 +172,7 @@ export class Strategy implements passport.Strategy {
    */
   authorizationRequestParams<
     TOptions extends
-      passport.AuthenticateOptions = passport.AuthenticateOptions,
+    passport.AuthenticateOptions = passport.AuthenticateOptions,
   >(
     // @ts-ignore
     req: express.Request, options: TOptions,
@@ -201,7 +201,7 @@ export class Strategy implements passport.Strategy {
    */
   authorizationCodeGrantParameters<
     TOptions extends
-      passport.AuthenticateOptions = passport.AuthenticateOptions,
+    passport.AuthenticateOptions = passport.AuthenticateOptions,
   >(
     // @ts-ignore
     req: express.Request, options: TOptions,
@@ -214,7 +214,7 @@ export class Strategy implements passport.Strategy {
    */
   async authorizationRequest<
     TOptions extends
-      passport.AuthenticateOptions = passport.AuthenticateOptions,
+    passport.AuthenticateOptions = passport.AuthenticateOptions,
   >(
     this: passport.StrategyCreated<
       Strategy,
@@ -239,14 +239,8 @@ export class Strategy implements passport.Strategy {
       redirectTo.searchParams.set('code_challenge', code_challenge)
       redirectTo.searchParams.set('code_challenge_method', 'S256')
 
-      if (
-        this._config
-          .serverMetadata()
-          .code_challenge_methods_supported?.includes('S256') !== true &&
-        !redirectTo.searchParams.has('nonce')
-      ) {
-        redirectTo.searchParams.set('state', client.randomState())
-      }
+      redirectTo.searchParams.set('state', client.randomState())
+
 
       if (this._callbackURL && !redirectTo.searchParams.has('redirect_uri')) {
         redirectTo.searchParams.set('redirect_uri', this._callbackURL)
@@ -272,7 +266,7 @@ export class Strategy implements passport.Strategy {
         stateData.max_age = parseInt(max_age, 10)
       }
 
-      ;(req as any).session[sessionKey] = stateData
+      ; (req as any).session[sessionKey] = stateData
 
       if (this._useJAR) {
         let key: client.CryptoKey | client.PrivateKey
@@ -309,7 +303,7 @@ export class Strategy implements passport.Strategy {
    */
   async authorizationCodeGrant<
     TOptions extends
-      passport.AuthenticateOptions = passport.AuthenticateOptions,
+    passport.AuthenticateOptions = passport.AuthenticateOptions,
   >(
     this: passport.StrategyCreated<
       Strategy,
@@ -342,8 +336,7 @@ export class Strategy implements passport.Strategy {
             },
             new Headers(),
           ),
-          body: req,
-          duplex: 'half',
+          body: JSON.stringify(req.body),
         })
       }
 
@@ -409,7 +402,7 @@ export class Strategy implements passport.Strategy {
    */
   authenticate<
     TOptions extends
-      passport.AuthenticateOptions = passport.AuthenticateOptions,
+    passport.AuthenticateOptions = passport.AuthenticateOptions,
   >(
     this: passport.StrategyCreated<
       Strategy,

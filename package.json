@@ -81,7 +81,8 @@
     "tap:electron": "./tap/.electron.sh",
     "tap:node": "bash -c './tap/.node.sh'",
     "tap:workerd": "./tap/.workerd.sh",
-    "test": "bash -c 'source .node_flags.sh && ava'"
+    "test": "bash -c 'source .node_flags.sh && ava'",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "jose": "^5.9.6",
